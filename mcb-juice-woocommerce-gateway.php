@@ -146,7 +146,7 @@ function wc_mcb_juice_gateway_init() {
 		 */
 		public function email_instructions( $order, $sent_to_admin, $plain_text = false ) {
 		
-			if ( $this->instructions && ! $sent_to_admin && $this->id === $order->payment_method && $order->has_status( 'pending' ) ) {
+			if ( $this->instructions && ! $sent_to_admin && $this->id === $order->payment_method && $order->has_status( 'on-hold' ) ) {
 				echo wpautop( wptexturize( $this->instructions ) ) . PHP_EOL;
 			}
 		}
@@ -163,7 +163,7 @@ function wc_mcb_juice_gateway_init() {
 			$order = wc_get_order( $order_id );
 			
 			// Mark as on-hold (we're awaiting the payment)
-			$order->update_status( 'pending', __( 'Awaiting JUICE By MCB payment', 'wc-mcb-juice-gateway' ) );
+			$order->update_status( 'on-hold', __( 'Awaiting JUICE By MCB payment', 'wc-mcb-juice-gateway' ) );
 			
 			// Reduce stock levels
 			$order->reduce_order_stock();
