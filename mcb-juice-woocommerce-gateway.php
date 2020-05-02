@@ -112,7 +112,7 @@ function wc_mcb_juice_gateway_init() {
                     'title'       => __( 'Description', 'wc-mcb-juice-gateway' ),
                     'type'        => 'textarea',
                     'description' => __( 'Payment method description that the customer will see on your checkout.', 'wc-mcb-juice-gateway' ),
-                    'default'     => __( '1. Open Juice Application'.PHP_EOL.'2. Select Pay &amp; Transfer'.PHP_EOL.'3. Select Pay a Juice Merchant'.PHP_EOL.'4. Search [SET MERCHANT NAME HERE]'.PHP_EOL.'5. Enter the donated amount', 'wc-mcb-juice-gateway' ),
+                    'default'     => __( '1. Open Juice Application'.PHP_EOL.'2. Select Pay &amp; Transfer'.PHP_EOL.'3. Select Pay a Juice Merchant'.PHP_EOL.'4. Search [SET MERCHANT NAME HERE]'.PHP_EOL.'5. Enter the order amount', 'wc-mcb-juice-gateway' ),
                     'desc_tip'    => true,
                 ),
 
@@ -120,7 +120,7 @@ function wc_mcb_juice_gateway_init() {
                     'title'       => __( 'Instructions', 'wc-mcb-juice-gateway' ),
                     'type'        => 'textarea',
                     'description' => __( 'Instructions that will be added to the thank you page and emails.', 'wc-mcb-juice-gateway' ),
-                    'default'     => 'Make your payment via JUICE By MCB using the Pay Juice Agent Option of your JUICE mobile Application, Searching for "[SET MERCHANT NAME HERE]" or scanning the QR Code. Please use your Order ID as the payment note. Your donation won\'t be applied until the funds have cleared in our account.',
+                    'default'     => 'Make your payment via JUICE By MCB using the Pay Juice Agent Option of your JUICE mobile Application, Searching for "[SET MERCHANT NAME HERE]" or scanning the QR Code. Please use your Order ID as the payment note. Your order won\'t be processed until the funds have cleared in our account.',
                     'desc_tip'    => true,
                 ),
             ) );
