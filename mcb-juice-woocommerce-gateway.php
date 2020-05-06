@@ -77,6 +77,8 @@ function wc_mcb_juice_gateway_init() {
 			$this->title        = $this->get_option( 'title' );
 			$this->description  = $this->get_option( 'description' );
 			$this->instructions = $this->get_option( 'instructions', $this->description );
+			$this->merchant_name = $this->get_option( 'merchant_name' );
+			$this->qr_code_url = $this->get_option( 'qr_code_url' );
 		  
 			// Actions
 			add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -112,7 +114,7 @@ function wc_mcb_juice_gateway_init() {
                     'title'       => __( 'Description', 'wc-mcb-juice-gateway' ),
                     'type'        => 'textarea',
                     'description' => __( 'Payment method description that the customer will see on your checkout.', 'wc-mcb-juice-gateway' ),
-                    'default'     => __( '1. Open Juice Application'.PHP_EOL.'2. Select Pay &amp; Transfer'.PHP_EOL.'3. Select Pay a Juice Merchant'.PHP_EOL.'4. Search [SET MERCHANT NAME HERE]'.PHP_EOL.'5. Enter the order amount', 'wc-mcb-juice-gateway' ),
+                    'default'     => __( 'Pay using your MCB Juice App using Instructions hereunder.'.PHP_EOL, 'wc-mcb-juice-gateway' ),
                     'desc_tip'    => true,
                 ),
 
@@ -120,11 +122,41 @@ function wc_mcb_juice_gateway_init() {
                     'title'       => __( 'Instructions', 'wc-mcb-juice-gateway' ),
                     'type'        => 'textarea',
                     'description' => __( 'Instructions that will be added to the thank you page and emails.', 'wc-mcb-juice-gateway' ),
-                    'default'     => 'Make your payment via JUICE By MCB using the Pay Juice Agent Option of your JUICE mobile Application, Searching for "[SET MERCHANT NAME HERE]" or scanning the QR Code. Please use your Order ID as the payment note. Your order won\'t be processed until the funds have cleared in our account.',
+                    'default'     => 'We will send you a confirmation e-mail once payment has been validated on our end.',
                     'desc_tip'    => true,
-                ),
+				),
+				
+				'merchant_name' => array(
+                    'title'       => __( 'Merchant Name', 'wc-mcb-juice-gateway' ),
+                    'type'        => 'text',
+                    'description' => __( 'Your Juice Merchant Name as it appears in JUICE App', 'wc-mcb-juice-gateway' ),
+                    'default'     => '',
+                    'desc_tip'    => true,
+				),
+
+				'qr_code_url' => array(
+                    'title'       => __( 'QR Code URL', 'wc-mcb-juice-gateway' ),
+                    'type'        => 'text',
+                    'description' => __( 'Your Juice QR Code Image. You can upload same in the media library and paste the URL here. Remember to crop the image to fit the code!', 'wc-mcb-juice-gateway' ),
+                    'default'     => '',
+                    'desc_tip'    => true,
+				),
+				
             ) );
-        }
+		}
+		
+		function admin_options() {
+			?>
+			<h2><?php echo $this->method_title; ?></h2>
+			<p><?php echo $this->method_description; ?></p>
+			<table class="form-table">
+				<?php $this->generate_settings_html(); ?>
+			</table>
+			<?php
+			if(!empty($this->qr_code_url)){
+				?><img src="<?php echo $this->qr_code_url; ?>" style="max-width: 250px;" /><?php
+			}
+		}
 
         /**
 		 * Output for the order received page.
@@ -185,13 +217,23 @@ add_filter( 'woocommerce_gateway_description', 'gateway_mcb_juice_custom_gateway
 function gateway_mcb_juice_custom_gateway_custom_fields( $description, $payment_id ){
     //
     if( 'mcb_juice_gateway' === $payment_id ){
+		// Get an instance of the WC_Payment_Gateways object
+		$payment_gateways   = WC_Payment_Gateways::instance();
+
+		// Get the desired WC_Payment_Gateway object
+		$payment_gateway    = $payment_gateways->payment_gateways()[$payment_id];
         ob_start(); // Start buffering
 
-        echo '<div  class="mcb_juice_gateway-fields" style="padding:10px 0;">';
+		echo '<div  class="mcb_juice_gateway-fields" style="padding:10px 0;">';
+		
+		$qr_instructions = "";
+		if(!empty($payment_gateway->qr_code_url)){
+			$qr_instructions = "<p><img src='{$payment_gateway->qr_code_url}' style='max-height: 250px; display: block; float: none;' /></p>";
+		}
 
         woocommerce_form_field( 'transaction_id', array(
             'type'          => 'text',
-            'label'         => __("6. Enter MCB Juice Confirmation Number", "wc-mcb-juice-gateway"),
+            'label'         => __($qr_instructions.PHP_EOL."1. Open Juice Application".PHP_EOL."2. Select Pay &amp; Transfer".PHP_EOL."3. Select Pay a Juice Merchant".PHP_EOL."4. Search {$payment_gateway->merchant_name}".PHP_EOL."5. Enter the order amount".PHP_EOL."6. Enter MCB Juice Confirmation Number", "wc-mcb-juice-gateway"),
             'class'         => array('form-row-wide'),
             'required'      => false,
         ), '');
