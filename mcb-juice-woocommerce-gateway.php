@@ -258,3 +258,33 @@ function save_transaction_id_to_order_meta_data( $order, $data ) {
 		$order->set_transaction_id( sanitize_text_field( $_POST['transaction_id'] ) );
     }
 }
+
+function juice_add_transaction_id_column_in_orders_screen( $columns ) {
+
+    $new_columns = array();
+
+    foreach ( $columns as $column_name => $column_info ) {
+
+        $new_columns[ $column_name ] = $column_info;
+
+        if ( 'order_date' === $column_name ) {
+            $new_columns['transaction_id'] = __( 'Transaction ID', "wc-mcb-juice-gateway" );
+        }
+    }
+
+    return $new_columns;
+}
+add_filter( 'manage_edit-shop_order_columns', 'juice_add_transaction_id_column_in_orders_screen', 20);
+
+add_action( 'manage_shop_order_posts_custom_column', 'juice_add_transaction_id_column_in_orders_screen_content' );
+function juice_add_transaction_id_column_in_orders_screen_content( $column ) {
+   
+    global $post;
+ 
+    if ( 'transaction_id' === $column ) {
+ 
+        $order = wc_get_order( $post->ID );
+        echo $order->get_transaction_id();
+      
+    }
+}
