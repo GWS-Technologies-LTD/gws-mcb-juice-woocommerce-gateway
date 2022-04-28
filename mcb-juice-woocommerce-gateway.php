@@ -3,7 +3,7 @@
  * Plugin Name: MCB Juice WooCommerce Gateway
  * Plugin URI: https://www.gws-technologies.com
  * Description: A Woocoomerce payment gateway plugin that adds instructions for checking out using MCB Juice in Mauritius. More info on MCB Juice at https://www.mcb.mu/en/juice/
- * Version: 1.0
+ * Version: 1.1
  * Author: Jacques David Commarmond - GWS Technologies LTD
  * Author URI: https://www.gws-technologies.com
  */
@@ -79,6 +79,8 @@ function wc_mcb_juice_gateway_init() {
 			$this->instructions = $this->get_option( 'instructions', $this->description );
 			$this->merchant_name = $this->get_option( 'merchant_name' );
 			$this->qr_code_url = $this->get_option( 'qr_code_url' );
+			$this->qr_max_width = $this->get_option( 'qr_max_width' );
+			$this->qr_max_height = $this->get_option( 'qr_max_height' );
 		  
 			// Actions
 			add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
@@ -141,6 +143,22 @@ function wc_mcb_juice_gateway_init() {
                     'default'     => '',
                     'desc_tip'    => true,
 				),
+
+				'qr_max_width' => array(
+                    'title'       => __( 'QR Max-Width', 'wc-mcb-juice-gateway' ),
+                    'type'        => 'text',
+                    'description' => __( 'QR Code Max Width in Checkout Page', 'wc-mcb-juice-gateway' ),
+                    'default'     => '250px',
+                    'desc_tip'    => true,
+				),
+
+				'qr_max_height' => array(
+                    'title'       => __( 'QR Max-Height', 'wc-mcb-juice-gateway' ),
+                    'type'        => 'text',
+                    'description' => __( 'QR Code Max Height in Checkout Page', 'wc-mcb-juice-gateway' ),
+                    'default'     => '250px',
+                    'desc_tip'    => true,
+				),
 				
             ) );
 		}
@@ -154,7 +172,7 @@ function wc_mcb_juice_gateway_init() {
 			</table>
 			<?php
 			if(!empty($this->qr_code_url)){
-				?><img src="<?php echo $this->qr_code_url; ?>" style="max-width: 250px;" /><?php
+				?><img src="<?php echo $this->qr_code_url; ?>" style="max-width: <?php echo $this->qr_max_width; ?>;" /><?php
 			}
 		}
 
@@ -228,7 +246,7 @@ function gateway_mcb_juice_custom_gateway_custom_fields( $description, $payment_
 		
 		$qr_instructions = "";
 		if(!empty($payment_gateway->qr_code_url)){
-			$qr_instructions = "<p><img src='{$payment_gateway->qr_code_url}' style='max-height: 250px; display: block; float: none;' /></p>";
+			$qr_instructions = "<p><img src='{$payment_gateway->qr_code_url}' style='max-width: {$payment_gateway->qr_max_width}; max-height: {$payment_gateway->qr_max_height}; display: block; float: none;' /></p>";
 		}
 
         woocommerce_form_field( 'transaction_id', array(
