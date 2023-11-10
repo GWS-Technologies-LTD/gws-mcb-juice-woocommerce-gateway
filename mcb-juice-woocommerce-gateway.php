@@ -1,11 +1,12 @@
 <?php
 /**
  * Plugin Name: MCB Juice WooCommerce Gateway
+ * Author: GWS Technologies LTD
+ * Author URI: https://www.linkedin.com/in/jcommarmond/
  * Plugin URI: https://www.gws-technologies.com
  * Description: A Woocoomerce payment gateway plugin that adds instructions for checking out using MCB Juice in Mauritius. More info on MCB Juice at https://www.mcb.mu/en/juice/
  * Version: 1.1
  * Author: Jacques David Commarmond - GWS Technologies LTD
- * Author URI: https://www.gws-technologies.com
  */
 defined( 'ABSPATH' ) or exit;
 
