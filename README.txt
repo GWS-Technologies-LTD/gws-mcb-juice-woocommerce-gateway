@@ -24,6 +24,17 @@ Add MCB Juice Payment Gateway to your WooCommerce Checkout
 - Your store customers can now checkout with Juice by MCB
 - You will need to manually mark payments received in WooCommerce > Orders ( Just like for Bank Transfer ) once you've confirmed you received the payment
 
+#Compatibility
+The plugin is compatible with the “Checkout shortcode” and not the new “Checkout gutenberg block”.
+If you see an error saying no payment method is available after enabling the gatewaly, you can follow the following steps to fix this in the latest versions of woocommerce:
+
+- Go to Appearance > Editor > Templates > Checkout
+- Remove the Checkout block
+- Insert the Shortcode block and write inside it [woocommerce_checkout]
+- Save the template
+- The gateway should now appear on the checkout page
+
+
 # Contribution
 - You can contribute by going to https://github.com/GWS-Technologies-LTD/mcb-juice-woocommerce-gateway
 
