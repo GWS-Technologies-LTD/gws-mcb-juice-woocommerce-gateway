@@ -254,7 +254,7 @@ function gateway_mcb_juice_custom_gateway_custom_fields( $description, $payment_
             'type'          => 'text',
             'label'         => __($qr_instructions.PHP_EOL."1. Open Juice Application".PHP_EOL."2. Select Pay &amp; Transfer".PHP_EOL."3. Select Pay a Juice Merchant".PHP_EOL."4. Search {$payment_gateway->merchant_name}".PHP_EOL."5. Enter the order amount".PHP_EOL."6. Enter MCB Juice Confirmation Number", "wc-mcb-juice-gateway"),
             'class'         => array('form-row-wide'),
-            'required'      => false,
+            'required'      => true,
         ), '');
 
         echo '</div>';
@@ -269,6 +269,14 @@ function transaction_id_field_validation() {
 if ( $_POST['payment_method'] === 'mcb_juice_gateway' && isset($_POST['transaction_id']) && empty($_POST['transaction_id']) )
     wc_add_notice( __( 'Please enter the JUICE Confirmation Number in the previous step.' ), 'error' );
 }
+
+// add_filter( 'woocommerce_checkout_fields', 'remove_validation_from_field_transaction_id', PHP_INT_MAX, 1 );
+// function remove_validation_from_field_transaction_id( $woo_checkout_fields_array ) {
+//     // use unset to remove the validation from your desired field
+//     // like I am removing the phone number validation from billing address
+//     unset( $woo_checkout_fields_array['transaction_id'] ['validate'] );
+//     return $woo_checkout_fields_array;
+// }
 
 // Save "transaction_id" number to the order as custom meta data
 add_action('woocommerce_checkout_create_order', 'save_transaction_id_to_order_meta_data', 10, 4 );
